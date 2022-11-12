@@ -1,12 +1,13 @@
 package br.com.juniormoura.parking.controller;
 
+import br.com.juniormoura.parking.controller.dto.ParkingCreateDto;
 import br.com.juniormoura.parking.controller.dto.ParkingDTO;
 import br.com.juniormoura.parking.controller.mapper.ParkingMapper;
 import br.com.juniormoura.parking.model.Parking;
 import br.com.juniormoura.parking.service.ParkingService;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -17,15 +18,30 @@ public class ParkingController {
     private final ParkingService parkingService;
     private final ParkingMapper parkingMapper;
 
+
     public ParkingController(ParkingService parkingService, ParkingMapper parkingMapper) {
         this.parkingService = parkingService;
         this.parkingMapper = parkingMapper;
     }
 
     @GetMapping
-    public List<ParkingDTO> findAll(){
+    public ResponseEntity<List<ParkingDTO>> findAll(){
         List<Parking> parkingList = parkingService.findAll();
         List<ParkingDTO> result = parkingMapper.toParkingDtoList(parkingList);
-        return result;
+        return ResponseEntity.ok(result);
+    }
+    @GetMapping("/{id}")
+    public ResponseEntity<ParkingDTO> findById(@PathVariable String id){
+        Parking parking = parkingService.findById(id);
+        ParkingDTO result = parkingMapper.toParkingDTO(parking);
+        return ResponseEntity.ok(result);
+    }
+
+    @PostMapping
+    public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDto dto){
+        var parkingCreate = parkingMapper.toParkingCreate(dto);
+        var parking = parkingService.create(parkingCreate);
+        var result = parkingMapper.toParkingDTO(parking);
+        return ResponseEntity.status(HttpStatus.CREATED).body(result);
     }
 }

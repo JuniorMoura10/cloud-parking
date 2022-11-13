@@ -5,6 +5,8 @@ import br.com.juniormoura.parking.controller.dto.ParkingDTO;
 import br.com.juniormoura.parking.controller.mapper.ParkingMapper;
 import br.com.juniormoura.parking.model.Parking;
 import br.com.juniormoura.parking.service.ParkingService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/parking")
+@Api(tags = "Parking Controller")
 public class ParkingController {
 
     private final ParkingService parkingService;
@@ -25,12 +28,14 @@ public class ParkingController {
     }
 
     @GetMapping
+    @ApiOperation("Encontrar todos os carros estacionados")
     public ResponseEntity<List<ParkingDTO>> findAll(){
         List<Parking> parkingList = parkingService.findAll();
         List<ParkingDTO> result = parkingMapper.toParkingDtoList(parkingList);
         return ResponseEntity.ok(result);
     }
     @GetMapping("/{id}")
+    @ApiOperation("Encontrar os carros estacionados pelo Id")
     public ResponseEntity<ParkingDTO> findById(@PathVariable String id){
         Parking parking = parkingService.findById(id);
         ParkingDTO result = parkingMapper.toParkingDTO(parking);
@@ -38,6 +43,7 @@ public class ParkingController {
     }
 
     @PostMapping
+    @ApiOperation("Cria novas entradas de carros")
     public ResponseEntity<ParkingDTO> create(@RequestBody ParkingCreateDto dto){
         var parkingCreate = parkingMapper.toParkingCreate(dto);
         var parking = parkingService.create(parkingCreate);

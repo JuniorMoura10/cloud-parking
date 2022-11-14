@@ -61,4 +61,11 @@ public class ParkingService {
         return parking;
 
     }
+
+    public Parking exit(String id) {
+        //recuperar estacionado
+        //atualizar data de saída
+        //calcular o valor
+        return null;
+    }
 }

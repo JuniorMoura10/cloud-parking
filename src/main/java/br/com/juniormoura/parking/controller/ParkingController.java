@@ -66,4 +66,11 @@ public class ParkingController {
         var result = parkingMapper.toParkingDTO(parking);
         return ResponseEntity.status(HttpStatus.OK).body(result);
     }
+
+    @PostMapping("/{id}")
+    @ApiOperation("Calcula o valor e a hora de saída dos carros")
+    public ResponseEntity<ParkingDTO> exit(@PathVariable String id){
+        var parking = parkingService.exit(id);
+        return ResponseEntity.ok(parkingMapper.toParkingDTO(parking));
+    }
 }

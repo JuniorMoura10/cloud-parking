@@ -4,11 +4,12 @@ import br.com.juniormoura.parking.exception.ParkingNotFoundException;
 import br.com.juniormoura.parking.model.Parking;
 import br.com.juniormoura.parking.repository.ParkingRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 public class ParkingService {
@@ -19,6 +20,7 @@ public class ParkingService {
         this.parkingRepository = parkingRepository;
     }
 
+    @Transactional(readOnly = true, propagation= Propagation.SUPPORTS)
     public List<Parking> findAll(){
         return parkingRepository.findAll();
     }
@@ -27,11 +29,13 @@ public class ParkingService {
         return UUID.randomUUID().toString().replace("-", "");
     }
 
+    @Transactional(readOnly = true, propagation = Propagation.SUPPORTS)
     public Parking findById(String id) {
         return parkingRepository.findById(id).orElseThrow(() ->
                 new ParkingNotFoundException(id));
     }
 
+    @Transactional
     public Parking create(Parking parkingCreate) {
         String uuid = getUUID();
         parkingCreate.setId(uuid);
@@ -40,11 +44,13 @@ public class ParkingService {
         return parkingCreate;
     }
 
+    @Transactional
     public void delete(String id) {
         Parking parking = findById(id);
         parkingRepository.deleteById(id);
     }
 
+    @Transactional
     public Parking update(String id, Parking parkingCreate) {
         Parking parking = findById(id);
         parking.setColor(parkingCreate.getColor());
@@ -56,10 +62,12 @@ public class ParkingService {
 
     }
 
-    public Parking exit(String id) {
-        //recuperar estacionado
-        //atualizar data de saída
-        //calcular o valor
-        return null;
+    @Transactional
+    public Parking checkOut(String id) {
+        Parking parking = findById(id);
+        parking.setExitDate(LocalDateTime.now());
+        parking.setBill(ParkingCheckOut.getBill(parking));
+        parkingRepository.save(parking);
+        return parking;
     }
 }

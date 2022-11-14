@@ -2,7 +2,6 @@ package br.com.juniormoura.parking.controller;
 
 import br.com.juniormoura.parking.controller.dto.ParkingCreateDto;
 import io.restassured.RestAssured;
-import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,9 +28,6 @@ class ParkingControllerIT {
                 .get("/parking")
                 .then()
                 .statusCode(HttpStatus.OK.value());
-
-
-
     }
 
     @Test

@@ -1,10 +1,11 @@
 package br.com.juniormoura.parking.model;
 
 import javax.persistence.Embeddable;
+import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.time.LocalDateTime;
 
-@Embeddable
+@Entity
 public class Parking {
 
     @Id

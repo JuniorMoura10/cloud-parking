@@ -1,9 +1,13 @@
 package br.com.juniormoura.parking.model;
 
+import javax.persistence.Embeddable;
+import javax.persistence.Id;
 import java.time.LocalDateTime;
 
+@Embeddable
 public class Parking {
 
+    @Id
     private String id;
     private String license;
     private String state;
